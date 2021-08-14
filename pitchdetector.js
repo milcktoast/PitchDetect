@@ -63,7 +63,7 @@ function getLiveInput(context,callback){
 	        }).then(function(stream){
 	        	var liveInputNode = context.createMediaStreamSource(stream);
 	        	callback(null,liveInputNode);
-	        }).error(function(error){
+	        }).catch(function(error){
    				console.error('getUserMedia error',error);
 	        	callback(error,null);
 	        });

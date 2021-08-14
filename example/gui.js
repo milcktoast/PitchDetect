@@ -26,7 +26,7 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
 $(function(){
 	// Global Variables
-	var audioContext = new AudioContext();
+	var audioContext = null;
 	var osc = null;
 	var options = {	start: true };
 	var needsReset = true;
@@ -143,9 +143,9 @@ $(function(){
 	request.open("GET", "./whistling3.ogg", true);
 	request.responseType = "arraybuffer";
 	request.onload = function() {
-	  audioContext.decodeAudioData( request.response, function(buffer) { 
-	    	theBuffer = buffer;
-	    	console.log('loaded audio');
+	audioContext.decodeAudioData( request.response, function(buffer) { 
+			theBuffer = buffer;
+			console.log('loaded audio');
 		} );
 	};
 	request.send();
@@ -173,6 +173,10 @@ $(function(){
 	};
 
 	window.start = function start(){
+		if (!audioContext) {
+			audioContext = new AudioContext();
+		}
+
 		if(needsReset && pitchDetector) {
 			pitchDetector.destroy();
 			pitchDetector = null;
@@ -286,3 +290,4 @@ $(function(){
 	}
 
 });
+
