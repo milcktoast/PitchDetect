@@ -50,7 +50,7 @@ function centsOffFromPitch( frequency, note ) {
 
 function getLiveInput(context,callback){
 	try {
-	    navigator.getUserMedia(
+	    navigator.mediaDevices.getUserMedia(
 	    	{
 	            "audio": {
 	                "mandatory": {
@@ -60,10 +60,10 @@ function getLiveInput(context,callback){
 	                    "googHighpassFilter": "false"
 	                },
 	            },
-	        }, function(stream){
+	        }).then(function(stream){
 	        	var liveInputNode = context.createMediaStreamSource(stream);
 	        	callback(null,liveInputNode);
-	        }, function(error){
+	        }).error(function(error){
    				console.error('getUserMedia error',error);
 	        	callback(error,null);
 	        });
@@ -75,7 +75,6 @@ function getLiveInput(context,callback){
 
 // prefix fixes
 var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 function PitchDetector(options){
 
