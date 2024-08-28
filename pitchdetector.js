@@ -50,27 +50,26 @@ function centsOffFromPitch( frequency, note ) {
 
 function getLiveInput(context,callback){
 	try {
-	    navigator.mediaDevices.getUserMedia(
-	    	{
-	            "audio": {
-	                "mandatory": {
-	                    "googEchoCancellation": "false",
-	                    "googAutoGainControl": "false",
-	                    "googNoiseSuppression": "false",
-	                    "googHighpassFilter": "false"
-	                },
-	            },
-	        }).then(function(stream){
-	        	var liveInputNode = context.createMediaStreamSource(stream);
-	        	callback(null,liveInputNode);
-	        }).catch(function(error){
-   				console.error('getUserMedia error',error);
-	        	callback(error,null);
-	        });
-   	} catch(e) {
-   		console.error('getUserMedia exception',e);
-        callback(e,null);
-   	}
+		navigator.mediaDevices.getUserMedia({
+			audio: {
+				mandatory: {
+					echoCancellation: "false",
+					autoGainControl: "false",
+					noiseSuppression: "false",
+					highpassFilter: "false"
+				},
+			}
+		}).then(function(stream){
+			var liveInputNode = context.createMediaStreamSource(stream);
+			callback(null, liveInputNode);
+		}).catch(function(error){
+			console.error('getUserMedia error', error);
+			callback(error,null);
+		});
+	} catch(e) {
+		console.error('getUserMedia exception', e);
+		callback(e,null);
+	}
 }
 
 // prefix fixes
