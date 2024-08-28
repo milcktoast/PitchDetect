@@ -112,7 +112,7 @@ function PitchDetector(options){
 	};
 
 	this.lastOnDetect = 0.0;
-	
+
 	// Set input
 	if(!options.input){
 		var self = this;
@@ -134,11 +134,7 @@ function PitchDetector(options){
 	}
 
 	// Set options
-	options.input = undefined;  	// 'input' option only allowed in constructor
-	options.output = undefined; 	// 'output' option only allowed in constructor
-	options.context = undefined;	// 'context' option only allowed in constructor
-	options.length = undefined;		// 'length' option only allowed in constructor
-	this.setOptions(options);
+	this.setOptions(options, true);
 }
 
 PitchDetector.prototype.setOptions = function(options,ignoreConstructorOnlyProperties){
@@ -172,10 +168,10 @@ PitchDetector.prototype.setOptions = function(options,ignoreConstructorOnlyPrope
 		maxPeriod = period;
 	}
 	if(options.minNote){
-		maxPeriod = Math.round(noteToPeriod(options.minNote,this.sampleRate));	
+		maxPeriod = Math.round(noteToPeriod(options.minNote,this.sampleRate));
 	}
 	if(options.maxNote){
-		minPeriod = Math.round(noteToPeriod(options.maxNote,this.sampleRate));	
+		minPeriod = Math.round(noteToPeriod(options.maxNote,this.sampleRate));
 	}
 	if(options.minFrequency) {
 		maxPeriod = Math.floor(this.sampleRate / options.minFrequency);
@@ -236,7 +232,7 @@ PitchDetector.prototype.start = function(){
 	if(!this.analyser && this.input){
 		//this.analyser = this.context.createAnalyser();
 		//this.analyser.fftSize = this.buffer.length * 2;
-		
+
 		this.analyser = this.context.createScriptProcessor(this.options.length);
 		this.analyser.onaudioprocess = this.autoCorrelate.bind(this);
 		this.input.connect(this.analyser);
@@ -253,7 +249,7 @@ PitchDetector.prototype.start = function(){
 		}
 	}
 	if(!this.started){
-		this.started = true; 
+		this.started = true;
 		requestAnimationFrame(this.update);
 	}
 };
@@ -277,7 +273,7 @@ PitchDetector.prototype.stop = function(){
 };
 
 // Free op resources
-// 
+//
 // Note: It's not tested if it actually frees up resources
 PitchDetector.prototype.destroy = function(){
 	this.stop();
@@ -340,7 +336,7 @@ PitchDetector.prototype.autoCorrelate = function AutoCorrelate(event){
 	var best_correlation = 0;
 
 	// Keep track of local minima (i.e. nearby low correlation)
-	var worst_period = 0;	
+	var worst_period = 0;
 	var worst_correlation = 1;
 
 	// Remember previous correlation to determine if
@@ -369,14 +365,13 @@ PitchDetector.prototype.autoCorrelate = function AutoCorrelate(event){
 	var PERIOD_LENGTH = this.periods.length;
 	var MAX_SAMPLES = this.MAX_SAMPLES;
 
-
 	// Check if there is enough signal
 	for (i=0; i< BUFFER_LENGTH;i++) {
 		rms += this.buffer[i]*this.buffer[i];
 		// determine peak volume
 		if(this.buffer[i] > peak) peak = this.buffer[i];
 	}
-	rms = Math.sqrt(rms/ BUFFER_LENGTH); 
+	rms = Math.sqrt(rms/ BUFFER_LENGTH);
 
 	// Abort if not enough signal
 	if (rms< this.options.minRms) {
@@ -392,7 +387,7 @@ PitchDetector.prototype.autoCorrelate = function AutoCorrelate(event){
 
 	/**
 	 *  Test different periods (i.e. frequencies)
-	 *  
+	 *
 	 *  Buffer: |----------------------------------------| (1024)
 	 *  i:      |    					1      44.1 kHz
 	 *  		||                      2      22.05 kHz
@@ -401,11 +396,11 @@ PitchDetector.prototype.autoCorrelate = function AutoCorrelate(event){
 	 *          ...
 	 *          |-------------------|   512    86hz
 	 *
-	 * 
+	 *
 	 *  frequency = sampleRate / period
 	 *  period = sampleRate / frequency
-	 *  
-	 * 
+	 *
+	 *
 	 */
 	for (i=0; i < PERIOD_LENGTH; i++) {
 		period = this.periods[i];
@@ -420,7 +415,7 @@ PitchDetector.prototype.autoCorrelate = function AutoCorrelate(event){
 		 *
 		 * Version 2 exagerates differences, which is a good property.
 		 * So we'll use version 2.
-		 *  
+		 *
 		 *  Buffer: |-------------------|--------------------| (1024)
 		 *  j:
 		 *  		|---|                        0
@@ -434,40 +429,42 @@ PitchDetector.prototype.autoCorrelate = function AutoCorrelate(event){
 		for (j=0; j < MAX_SAMPLES; j++) {
 			// Version 1: Absolute values
 			correlation += Math.abs((this.buffer[j])-(this.buffer[j+period])) / NORMALIZE;
-			
+
 			// Version 2: Squared values (exagarates difference, works better)
 			//correlation += Math.pow((this.buffer[j]-this.buffer[j+period]) / NORMALIZE,2);
 		}
 
 		// Version 1: Absolute values
 		correlation = 1 - (correlation/MAX_SAMPLES);
-		
+
 		// Version 2: Squared values
 		//correlation = 1 - Math.sqrt(correlation/MAX_SAMPLES);
 
 		// Save Correlation
-		this.correlations[period] = correlation; 
+		this.correlations[period] = correlation;
 
 		// We're descending (i.e. moving towards frequencies that are NOT in here)
 		if(last_correlation > correlation){
- 	       
- 	       // We already found a good correlation, so early stop!
- 	       if(this.options.minCorrelation && best_correlation > this.options.minCorrelation) {
- 	       		found_pitch = true;
- 	       		break;
- 	       }
 
- 	       // We already found a good correlationIncrease, so early stop!
- 	       if(this.options.minCorrelationIncrease && best_correlation - worst_correlation > this.options.minCorrelationIncrease){
- 	       		found_pitch = true;
+			// We already found a good correlation, so early stop!
+			if(this.options.minCorrelation && best_correlation > this.options.minCorrelation) {
+				found_pitch = true;
 				break;
- 	       }
+			}
 
- 	       // Save the worst correlation of the latest descend (local minima)
- 	       worst_correlation = correlation;
- 	       worst_period = period;
+			// We already found a good correlationIncrease, so early stop!
+			if(this.options.minCorrelationIncrease &&
+				best_correlation - worst_correlation > this.options.minCorrelationIncrease
+			) {
+				found_pitch = true;
+				break;
+			}
 
- 	    // we're ascending, and found a new high!
+			// Save the worst correlation of the latest descend (local minima)
+			worst_correlation = correlation;
+			worst_period = period;
+
+			// we're ascending, and found a new high!
 		} else if(find_local_maximum || correlation > best_correlation){
 			best_correlation = correlation;
 			best_period = period;
@@ -497,16 +494,20 @@ PitchDetector.prototype.autoCorrelate = function AutoCorrelate(event){
 		this.stats.rms = rms;
 
 		var shift = 0;
-		if(this.options.interpolateFrequency && i >= 3 && period >= best_period + 1 && this.correlations[best_period+1] && this.correlations[best_period-1]){
+		if(this.options.interpolateFrequency &&
+			i >= 3 && period >= best_period + 1 &&
+			this.correlations[best_period+1] &&
+			this.correlations[best_period-1]
+		) {
 			// Now we need to tweak the period - by interpolating between the values to the left and right of the
 			// best period, and shifting it a bit.  This is complex, and HACKY in this code (happy to take PRs!) -
 			// we need to do a curve fit on this.correlations[] around best_period in order to better determine precise
 			// (anti-aliased) period.
 
-			// we know best_period >=1, 
-			// since found_pitch cannot go to true until the second pass (period=1), and 
+			// we know best_period >=1,
+			// since found_pitch cannot go to true until the second pass (period=1), and
 			// we can't drop into this clause until the following pass (else if).
-			shift = (this.correlations[best_period+1] - this.correlations[best_period-1]) / best_correlation;  
+			shift = (this.correlations[best_period+1] - this.correlations[best_period-1]) / best_correlation;
 			shift = shift * 8;
 		}
 		this.stats.frequency = this.sampleRate/(best_period + shift);
@@ -519,7 +520,7 @@ PitchDetector.prototype.autoCorrelate = function AutoCorrelate(event){
 			this.started = false;
 		}
 		return true;
-	} else {		
+	} else {
 		return false;
 	}
 };
