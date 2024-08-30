@@ -184,9 +184,6 @@ PitchDetector.prototype.setOptions = function(options,ignoreConstructorOnlyPrope
 	}
 };
 
-// TODO: Refactor audio processing to use AudioWorklet
-// (createScriptProcessor is deprecated)
-
 PitchDetector.prototype.loadAnalyser = function() {
 	if (this.isLoading) return
 	this.isLoading = true
