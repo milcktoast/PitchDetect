@@ -1,14 +1,13 @@
 (function(){
 	var PitchDetectorCanvasDraw = function PitchDetectorCanvasDraw(canvas,stats,pitchDetector){
-		if(!pitchDetector || !pitchDetector.buffer) return;
-		var buf = pitchDetector.buffer;
+		if(!pitchDetector) return;
 		var i = 0, val = 0, len = 0, start = 20, end = 50;
 		if(pitchDetector.periods){
 			start = pitchDetector.periods[0] + 20;
 			end = pitchDetector.periods[pitchDetector.periods.length-1] + 20;
 		}
 		var width = end-start;
-		
+
 		canvas.clearRect(0,0,512,256);
 		canvas.fillStyle = "#EEFFEE";
 		canvas.fillRect(start,0,width,256);
@@ -17,7 +16,7 @@
 		if(pitchDetector.options.minCorrelation){
 			canvas.fillStyle = "yellow";
 			canvas.fillRect(start,0,width,(1-pitchDetector.options.minCorrelation) * 256);
-		} 
+		}
 
 		// AREA: Draw Correlations
 		if(pitchDetector.correlations){
@@ -45,8 +44,7 @@
 		canvas.lineTo(end,256);
 		canvas.stroke();
 
-
-		// AREA: Draw RMS 
+		// AREA: Draw RMS
 		canvas.fillStyle = "red";
 		val = 256 - stats.rms * 256;
 		canvas.fillRect(0,val,10,256-val);
@@ -62,7 +60,7 @@
 		// LINE: Draw Strength (i.e. increase in correlation)
 		if(pitchDetector.options.minCorrelationIncrease){
 
-		    // AREA increase measured
+			// AREA increase measured
 			canvas.fillStyle = "#EEEEFF";
 			val = 256 - (stats.best_correlation - stats.worst_correlation) * 256;
 			canvas.fillRect(10,val,10,256-val);
@@ -86,9 +84,7 @@
 			canvas.moveTo(val,0);
 			canvas.lineTo(val,256);
 
-
 			canvas.stroke();
-		    
 		}
 	};
 	if(typeof module === 'undefined'){

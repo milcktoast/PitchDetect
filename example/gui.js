@@ -28,7 +28,7 @@ $(function(){
 	// Global Variables
 	var audioContext = null;
 	var osc = null;
-	var options = {	start: true };
+	var options = {	start: true, autoLoad: true };
 	var needsReset = true;
 	var pitchDetector = null;
 	var theBuffer = null;
@@ -139,16 +139,16 @@ $(function(){
 	};
 
 	// Get example audio file
-	var request = new XMLHttpRequest();
-	request.open("GET", "./whistling3.ogg", true);
-	request.responseType = "arraybuffer";
-	request.onload = function() {
-	audioContext.decodeAudioData( request.response, function(buffer) { 
-			theBuffer = buffer;
-			console.log('loaded audio');
-		} );
-	};
-	request.send();
+	// var request = new XMLHttpRequest();
+	// request.open("GET", "./whistling3.ogg", true);
+	// request.responseType = "arraybuffer";
+	// request.onload = function() {
+	// audioContext.decodeAudioData( request.response, function(buffer) { 
+	// 		theBuffer = buffer;
+	// 		console.log('loaded audio');
+	// 	} );
+	// };
+	// request.send();
 
 	// Global Methods
 	window.stopNote = function stopNote(){
@@ -239,6 +239,8 @@ $(function(){
 		options[inputs.draw.val()] = draw;
 
 		options.context = audioContext;
+		options.workerPath = location.pathname.replace('example/', '')
+
 		if(needsReset || !pitchDetector){
 			console.log('created PitchDetector',options);
 			pitchDetector = new PitchDetector(options);
