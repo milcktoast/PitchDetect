@@ -131,6 +131,7 @@ class PitchDetectorWorker extends AudioWorkletProcessor {
 	fillBuffer (inputList) {
 		let { bufferState } = this
 		let input = inputList[0][0]
+		if (!input) return
 
 		bufferState.buffer.set(input, bufferState.fillIndex)
 		bufferState.fillIndex += input.length

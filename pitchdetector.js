@@ -142,7 +142,7 @@ PitchDetector.prototype.setOptions = function(options,ignoreConstructorOnlyPrope
 	// Override options (if defined)
 	['minCorrelation','minCorrelationIncrease','minRms',
 		'normalize','stopAfterDetection','interpolateFrequency',
-		'start', 'onDebug','onDetect','onDestroy'
+		'workerPath', 'start', 'onDebug','onDetect','onDestroy'
 	].forEach(function(option){
 		if(typeof options[option] !== 'undefined') {
 			self.options[option] = options[option];
