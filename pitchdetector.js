@@ -53,10 +53,10 @@ function getLiveInput(context,callback){
 		navigator.mediaDevices.getUserMedia({
 			audio: {
 				mandatory: {
-					echoCancellation: "false",
-					autoGainControl: "false",
-					noiseSuppression: "false",
-					highpassFilter: "false"
+					echoCancellation: false,
+					autoGainControl: false,
+					noiseSuppression: false,
+					highpassFilter: false
 				},
 			}
 		}).then(function(stream){
