@@ -2,7 +2,7 @@
 
 Based on Chris Wilson's work, an improved pitch detector. The Pitch Detector calculates auto-correlation score for a range of frequencies.
 
-See demo at https://milcktoast.github.io/PitchDetect/example/.
+See demo at [https://milcktoast.github.io/PitchDetect/example/](https://milcktoast.github.io/PitchDetect/example/).
 
 ## Examples
 
@@ -185,7 +185,7 @@ If you know what you're looking or, set a frequency range.
 
 ## Contribute
 
-This is an old-ish project which was using deprecated browser APIs and outdated module standards, so I created this fork to modernize the library. The original source can stil be found at https://github.com/cwilso/PitchDetect.
+This is an old-ish project which was using deprecated browser APIs and outdated module standards, so I created this fork to modernize the library. The original source can still be found at https://github.com/cwilso/PitchDetect.
 
 ## Credits
 
