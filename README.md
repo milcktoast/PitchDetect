@@ -2,7 +2,7 @@
 
 Based on Chris Wilson's work, an improved pitch detector. The Pitch Detector calculates auto-correlation score for a range of frequencies.
 
-See demo at http://lab.madebymark.nl/pitch-detector/example/.
+See demo at https://milcktoast.github.io/PitchDetect/example/.
 
 ## Examples
 
@@ -29,11 +29,15 @@ Detect a sudden increase in correlation:
 * `pitchdetectorcanvas.js` allows you to visualize pitch detection on a canvas.
 * `example/gui.js` is a playground to test and tweak the pitch detector.
 
-Drop `pitchdetector.js` in your page, or require the CommonJS module using Webpack or Browserify.
+Import `pitchdetector` and optionally `pitchdetector/pitchdetectorcanvas.js`
 
 First, create a PitchDetector:
 ```javascript
-var detector = new PitchDetector({
+
+import { PitchDetector } from 'pitchdetector'
+import { PitchDetectorPitchDetectorCanvasDraw } from 'pitchdetector/pitchdetectorcanvas.js'
+
+let detector = new PitchDetector({
 	// Audio Context (Required)
 	context: new AudioContext(),
 
@@ -162,6 +166,11 @@ If you know what you're looking or, set a frequency range.
 
 ## Changelog
 
+### 0.3.0 (05/09/2024)
+
+* Refactored audio processing to use an AudioWorkletProcessor as the ScriptProcessingNode API is deprecated.
+* Refactored modules to ES6.
+
 ### 0.2.0 (26/02/2015)
 
 * Used ScriptProcessingNode for faster analysis. Callbacks are still tied to the requestAnimationFrame.
@@ -176,15 +185,10 @@ If you know what you're looking or, set a frequency range.
 
 ## Contribute
 
-I first want to check if the original author, Chris Wilson, is willing to pull my fork. So please check out the original version at https://github.com/cwilso/PitchDetect.
+This is an old-ish project which was using deprecated browser APIs and outdated module standards, so I created this fork to modernize the library. The original source can stil be found at https://github.com/cwilso/PitchDetect.
 
 ## Credits
 
-Original code from [Chris Wilson](https://github.com/cwilso), improvements (see changelog) by [Mark Marijnissen](https://github.com/markmarijnissen)
-
-## Contact
--   @markmarijnissen
--   http://www.madebymark.nl
--   info@madebymark.nl
+Original code from [Chris Wilson](https://github.com/cwilso), improvements (see changelog) by [Mark Marijnissen](https://github.com/markmarijnissen), modernization by [Ash Weeks](https://github.com/milcktoast)
 
 © 2015 - Mark Marijnissen & Chris Wilson
