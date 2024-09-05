@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { PitchDetector } from '../pitchdetector.js'
+import { PitchDetectorCanvasDraw } from '../pitchdetectorcanvas.js'
+
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
 $(function(){
@@ -68,8 +71,8 @@ $(function(){
 	};
 
 	// Canvas Element
-	canvasEl = $("#waveform").get(0);
-	canvas = canvasEl.getContext("2d");
+	var canvasEl = $("#waveform").get(0);
+	var canvas = canvasEl.getContext("2d");
 	window.savePic = function(){
 		window.open(canvasEl.toDataURL("image/png"));
 	};
